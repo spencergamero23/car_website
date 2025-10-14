@@ -38,7 +38,7 @@ const material = new THREE.MeshPhysicalMaterial({
 const torus = new THREE.Mesh(geometry, material);
 scene.add(torus);
 
-// Sphere
+// Sphere https://codesandbox.io/p/sandbox/wbrfs?file=%2Fsrc%2FApp.js%3A45%2C14
 const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
 const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0x055ddd, metalness: 0.7, roughness: 0.2 });
 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);

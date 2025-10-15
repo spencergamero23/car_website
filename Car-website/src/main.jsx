@@ -59,32 +59,34 @@ scene.add(lightHelper, gridHelper);
 // --- CONTROLS ---
 const controls = new OrbitControls(camera, renderer.domElement);
 
-// --- MOUSE DETECTION---
-window.addEventListener('mousemove', (event) => {
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObject(sphere);
-
-  if (intersects.length > 0) {
-    window.open('https://www.google.com/?zx=1760219980799&no_sw_cr=1', '_blank');
-  }
-});
 
 // --- RAYCASTER CLICK DETECTION ---
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-window.addEventListener('click', (event) => {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+let mouseDownPos = {x:0, y:0};
+//mouse down
+window.addEventListener('mousedown', (event) => {
+  mouseDownPos.x = event.clientX;
+  mouseDownPos.y = event.clientY;
+});
 
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObject(sphere);
+//mouse up
+window.addEventListener('mouseup', (event) => {
+  const dx = event.clientX - mouseDownPos.x;
+  const dy = event.clientY - mouseDownPos.y;
+  const distance = Math.sqrt(dx * dx + dy * dy);
 
-  if (intersects.length > 0) {
-    window.open('https://www.google.com/?zx=1760219980799&no_sw_cr=1', '_blank');
+  if (distance < 5){
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObject(sphere);
+
+    if (intersects.length > 0){
+      window.open('https://www.google.com/?zx=1760219980799&no_sw_cr=1', '_blank');
+    }
   }
 });
 

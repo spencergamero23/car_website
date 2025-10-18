@@ -45,6 +45,13 @@ const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 sphere.position.set(-10, 0, 30);
 scene.add(sphere);
 
+// Pyramid (to be animated on click)
+ const pyramidGeometry = new THREE.ConeGeometry(1, 3, 4);
+      const pyramidMaterial = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.8, roughness: 0.2 });
+      const pyramid = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
+      pyramid.position.set(-10, 0, 30);
+      scene.add(pyramid);
+
 // --- LIGHTS ---
 const pointLight = new THREE.PointLight(0xffffff);
 pointLight.position.set(15, 15, 15);
@@ -77,7 +84,7 @@ window.addEventListener('mouseup', (event) => {
   const dy = event.clientY - mouseDownPos.y;
   const distance = Math.sqrt(dx * dx + dy * dy);
 
-  if (distance < 5){
+  if (distance < 10){
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -85,7 +92,10 @@ window.addEventListener('mouseup', (event) => {
     const intersects = raycaster.intersectObject(sphere);
 
     if (intersects.length > 0){
-      window.open('https://www.google.com/?zx=1760219980799&no_sw_cr=1', '_blank');
+      
+      pyramid.rotation.x  -= 2;
+      pyramid.scale.set(10,10,10);
+      camera.lookAt(-10, 0, 30);
     }
   }
 });

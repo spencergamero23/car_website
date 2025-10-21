@@ -47,10 +47,10 @@ scene.add(sphere);
 
 // Pyramid (to be animated on click)
  const pyramidGeometry = new THREE.ConeGeometry(1, 3, 4);
-      const pyramidMaterial = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.8, roughness: 0.2 });
-      const pyramid = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
-      pyramid.position.set(-10, 0, 30);
-      scene.add(pyramid);
+ const pyramidMaterial = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.8, roughness: 0.2 });
+ const pyramid = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
+ pyramid.position.set(-10, 0, 30);
+ scene.add(pyramid);
 
 // --- LIGHTS ---
 const pointLight = new THREE.PointLight(0xffffff);
@@ -91,11 +91,24 @@ window.addEventListener('mouseup', (event) => {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObject(sphere);
 
-    if (intersects.length > 0){
-      
-      pyramid.rotation.x  -= 2;
-      pyramid.scale.set(10,10,10);
-      camera.lookAt(-10, 0, 30);
+    if (intersects.length > 0) {
+      // ✅ Rotate pyramid so the base faces +Z (camera will be in front)
+      pyramid.rotation.set(Math.PI / 2, 0, Math.PI / 4); // x, y, z
+
+      // ✅ Pyramid stays at (-10, 0, 30), so move camera in front of it (e.g. +Z direction)
+      const distanceFromPyramid = 20;
+      camera.position.set(
+        pyramid.position.x,
+        pyramid.position.y,
+        pyramid.position.z + distanceFromPyramid
+      );
+
+      // ✅ Look directly at the pyramid
+      camera.lookAt(pyramid.position);
+
+      // ✅ Optional: disable controls
+      controls.enabled = false;
+
     }
   }
 });

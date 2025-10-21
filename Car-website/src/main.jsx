@@ -25,7 +25,6 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 // --- OBJECTS ---
-
 // Donut
 const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
 const material = new THREE.MeshPhysicalMaterial({
@@ -38,24 +37,17 @@ const material = new THREE.MeshPhysicalMaterial({
 const torus = new THREE.Mesh(geometry, material);
 scene.add(torus);
 
-// Sphere https://codesandbox.io/p/sandbox/wbrfs?file=%2Fsrc%2FApp.js%3A45%2C14
+// Sphere
 const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
 const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0x055ddd, metalness: 0.7, roughness: 0.2 });
 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 sphere.position.set(-10, 0, 30);
 scene.add(sphere);
 
-// Pyramid (to be animated on click)
- const pyramidGeometry = new THREE.ConeGeometry(1, 3, 4);
- const pyramidMaterial = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.8, roughness: 0.2 });
- const pyramid = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
- pyramid.position.set(-10, 0, 30);
- scene.add(pyramid);
 
 // --- LIGHTS ---
 const pointLight = new THREE.PointLight(0xffffff);
 pointLight.position.set(15, 15, 15);
-
 const ambientLight = new THREE.AmbientLight(0xffffff, 5);
 scene.add(pointLight, ambientLight);
 
@@ -66,25 +58,41 @@ scene.add(lightHelper, gridHelper);
 // --- CONTROLS ---
 const controls = new OrbitControls(camera, renderer.domElement);
 
-
 // --- RAYCASTER CLICK DETECTION ---
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-let mouseDownPos = {x:0, y:0};
-//mouse down
+let mouseDownPos = { x: 0, y: 0 };
+
+// --- HTML POPUP ELEMENT ---
+const popup = document.createElement('div');
+popup.style.position = 'absolute';
+popup.style.background = 'rgba(255,255,255,0.95)';
+popup.style.padding = '12px 18px';
+popup.style.borderRadius = '12px';
+popup.style.boxShadow = '0 4px 15px rgba(0,0,0,0.25)';
+popup.style.fontFamily = 'sans-serif';
+popup.style.transition = 'opacity 0.3s ease';
+popup.style.opacity = '0';
+popup.style.pointerEvents = 'none';
+popup.innerHTML = `
+  <strong>Sphere Clicked!</strong><br>
+  The pyramid rotated and camera moved.
+`;
+document.body.appendChild(popup);
+
+// --- MOUSE EVENTS ---
 window.addEventListener('mousedown', (event) => {
   mouseDownPos.x = event.clientX;
   mouseDownPos.y = event.clientY;
 });
 
-//mouse up
 window.addEventListener('mouseup', (event) => {
   const dx = event.clientX - mouseDownPos.x;
   const dy = event.clientY - mouseDownPos.y;
   const distance = Math.sqrt(dx * dx + dy * dy);
 
-  if (distance < 10){
+  if (distance < 10) {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -92,23 +100,16 @@ window.addEventListener('mouseup', (event) => {
     const intersects = raycaster.intersectObject(sphere);
 
     if (intersects.length > 0) {
-      // ✅ Rotate pyramid so the base faces +Z (camera will be in front)
-      pyramid.rotation.set(Math.PI / 2, 0, Math.PI / 4); // x, y, z
-
-      // ✅ Pyramid stays at (-10, 0, 30), so move camera in front of it (e.g. +Z direction)
-      const distanceFromPyramid = 20;
-      camera.position.set(
-        pyramid.position.x,
-        pyramid.position.y,
-        pyramid.position.z + distanceFromPyramid
-      );
-
-      // ✅ Look directly at the pyramid
-      camera.lookAt(pyramid.position);
-
-      // ✅ Optional: disable controls
-      controls.enabled = false;
-
+      // https://www.youtube.com/watch?v=jizR55PCbvI
+      // ✅ Show HTML popup near click
+      popup.style.left = `${event.clientX + 10}px`;
+      popup.style.top = `${event.clientY - 20}px`;
+      popup.style.opacity = '1';
+      popup.style.pointerEvents = 'auto';
+    } else {
+      // Hide popup when clicking elsewhere
+      popup.style.opacity = '0';
+      popup.style.pointerEvents = 'none';
     }
   }
 });

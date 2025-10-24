@@ -5,6 +5,7 @@ import App from './App.jsx'
 
 import { OrbitControls } from 'three/examples/jsm/Addons.js'
 import * as THREE from 'three';
+import ModalPopup from './Modal.jsx';
 
 // --- SCENE SETUP ---
 const scene = new THREE.Scene();
@@ -65,20 +66,8 @@ const mouse = new THREE.Vector2();
 let mouseDownPos = { x: 0, y: 0 };
 
 // --- HTML POPUP ELEMENT ---
-const popup = document.createElement('div');
-popup.style.position = 'absolute';
-popup.style.background = 'rgba(255,255,255,0.95)';
-popup.style.padding = '12px 18px';
-popup.style.borderRadius = '12px';
-popup.style.boxShadow = '0 4px 15px rgba(0,0,0,0.25)';
-popup.style.fontFamily = 'sans-serif';
-popup.style.transition = 'opacity 0.3s ease';
-popup.style.opacity = '0';
-popup.style.pointerEvents = 'none';
-popup.innerHTML = `
-  <strong>Sphere Clicked!</strong><br>
-  The pyramid rotated and camera moved.
-`;
+const popup = document.createElement('modal-popup');
+
 document.body.appendChild(popup);
 
 // --- MOUSE EVENTS ---

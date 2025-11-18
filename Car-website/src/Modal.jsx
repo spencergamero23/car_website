@@ -18,10 +18,13 @@ function Modal({ onClose }) {
         exit={{ scale: 0.9, opacity: 0 }}
         transition={{ type: 'spring', stiffness: 300, damping: 25 }}
       >
-        <h2>Modal Title</h2>
-        <p>This is the modal content.</p>
+        <h2>Object</h2>
+        <p>This is the object content.</p>
+        <div className='object-shopping-link'></div>
+        <div className='object-video-link'></div>
+        <div className='object-information-section'></div>
         <button className="close-button" onClick={onClose}>
-          Close
+          ❌
         </button>
       </motion.div>
     </motion.div>
